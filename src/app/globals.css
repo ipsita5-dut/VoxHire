@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -39,4 +43,10 @@ a {
   html {
     color-scheme: dark;
   }
+}
+
+
+/* globals.css */
+.tech-tooltip {
+  @apply absolute bottom-full mb-2 hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded z-10;
 }
