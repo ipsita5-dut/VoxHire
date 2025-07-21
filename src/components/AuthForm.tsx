@@ -11,10 +11,13 @@ import {
   onAuthStateChanged
 } from 'firebase/auth';
 
+
 export default function AuthForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const mode = searchParams.get('mode');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const isSignup = mode === 'signup';
   
   const [formData, setFormData] = useState({
@@ -39,21 +42,13 @@ export default function AuthForm() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-   const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      alert('Logged out successfully');
-      setCurrentUserEmail(null);
-      router.push('/auth?mode=signin');
-    } catch (error) {
-      console.error('Logout Error:', error);
-      alert('Error logging out.');
-    }
-  };
+   
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    setLoading(true);
+    setError('');
     try{
       if (isSignup) {
         if (formData.password !== formData.confirmPassword) {
@@ -71,10 +66,10 @@ export default function AuthForm() {
         const idToken = await userCredential.user.getIdToken();
 
         await fetch("/api/auth/session", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ idToken }),
-});
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ idToken }),
+        });
         // Set Display Name
         await updateProfile(userCredential.user, {
           displayName: formData.name
@@ -125,34 +120,7 @@ await fetch("/api/auth/session", {
     }
   };
 
-    // 🔒 If already logged in, show logout button instead
-  if (currentUserEmail) {
-    return (
-      <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center text-white space-y-4">
-        <h1 className="text-xl font-bold">You are already signed in as {currentUserEmail}</h1>
-        <button
-          onClick={handleLogout}
-          className="px-4 py-2 bg-red-600 hover:bg-red-500 rounded font-semibold transition"
-        >
-          Logout
-        </button>
-      </div>
-    );
-  }
-  // 🔒 If already logged in, show logout button instead
-  if (currentUserEmail) {
-    return (
-      <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center text-white space-y-4">
-        <h1 className="text-xl font-bold">You are already signed in as {currentUserEmail}</h1>
-        <button
-          onClick={handleLogout}
-          className="px-4 py-2 bg-red-600 hover:bg-red-500 rounded font-semibold transition"
-        >
-          Logout
-        </button>
-      </div>
-    );
-  }
+   
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4">

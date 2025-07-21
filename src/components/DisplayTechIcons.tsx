@@ -11,6 +11,7 @@ interface TechIcon {
 
 interface DisplayTechIconsProps {
   techStack: string[];
+  size?: number;
 }
 
 const DisplayTechIcons: React.FC<DisplayTechIconsProps> = ({ techStack }) => {
@@ -41,7 +42,7 @@ const DisplayTechIcons: React.FC<DisplayTechIconsProps> = ({ techStack }) => {
           )}
         >
           <span className="tech-tooltip">{tech}</span>
-          <Image src={url} alt={tech} width={100} height={100} className="size-5" />
+          <Image src={url} alt={tech} width={24} height={24} className="size-6" />
         </div>
       ))}
     </div>

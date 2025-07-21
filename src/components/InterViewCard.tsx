@@ -7,6 +7,7 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import DisplayTechIcons from "./DisplayTechIcons";
 import { Badge } from "./ui/badge";
+import { motion } from "framer-motion";
 
 import { cn, getRandomInterviewCover } from "@/lib/utils";
 
@@ -16,7 +17,13 @@ interface Interview {
   type: string;
   techstack: string[];
   createdAt?: string;
+  questions: {
+    question: string;
+    category?: string;
+    difficulty?: string;
+  }[];
 }
+
 
 interface InterviewCardProps {
   interview: Interview;
@@ -29,16 +36,22 @@ const InterviewCard: React.FC<InterviewCardProps> = ({ interview }) => {
 
   const badgeGradient =
     {
-      Behavioral: "from-orange-500 to-pink-500",
-      Mixed: "from-purple-600 to-indigo-500",
-      Technical: "from-blue-500 to-cyan-500",
-    }[normalizedType] || "from-slate-500 to-slate-700";
+      Behavioral: "bg-gradient-to-r from-orange-500 to-pink-500",
+    Mixed: "bg-gradient-to-r from-purple-600 to-indigo-500",
+    Technical: "bg-gradient-to-r from-blue-500 to-cyan-500",
+  }[normalizedType] || "bg-gradient-to-r from-gray-400 to-gray-600";
 
   const formattedDate = dayjs(createdAt || Date.now()).format("MMM D, YYYY");
 
   return (
-    <div className="bg-gray rounded-2xl shadow-md w-[360px] max-sm:w-full min-h-96 overflow-hidden relative border border-gray-200">
-      <div className="relative p-5 flex flex-col justify-between h-full gap-4">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 1 }}
+      whileHover={{ scale: 1.03 }}
+      transition={{ duration: 0.4 }}
+      className="rounded-3xl border border-white/10 backdrop-blur-xl shadow-lg bg-white/5 text-white w-full max-w-sm p-6 space-y-5 hover:shadow-2xl transition-all"
+    >
+      <div className="relative p-6 flex flex-col justify-between h-full gap-4">
 
         {/* Badge */}
         <Badge
@@ -52,41 +65,44 @@ const InterviewCard: React.FC<InterviewCardProps> = ({ interview }) => {
 
 
           {/* Cover Image */}
-          <Image
-            src={getRandomInterviewCover()}
-            alt="cover-image"
-            width={90}
-            height={90}
-            className="rounded-full object-fit size-[90px]"
-          />
+          <div className="flex justify-center">
+        <Image
+          src={getRandomInterviewCover()}
+          alt="cover"
+          width={80}
+          height={80}
+          className="rounded-full border-2 border-white shadow-lg"
+        />
+      </div>
 
           {/* Interview Role */}
-          <h3 className="mt-5 capitalize">{role} Interview</h3>
-
+<h3 className="text-center text-lg font-semibold capitalize leading-tight">
+        {role} Interview
+      </h3>
           {/* Date */}
-          <div className="flex flex-row gap-5 mt-3">
-            <div className="flex flex-row gap-2">
-              <Image src="/calendar.svg" width={22} height={22} alt="calendar" />
-              <p>{formattedDate}</p>
-            </div>
-          </div>
+      <div className="flex items-center justify-center gap-2 text-sm text-gray-300">
+          <Image src="/cal.png" width={18} height={18} alt="calendar" />
+          <p>{formattedDate}</p>
+        </div>
 
           {/* Placeholder Text */}
-          <p className="line-clamp-2 mt-5">
+        <p className="text-sm text-gray-300 text-center px-2 mt-3 line-clamp-2">
             Practice this interview to assess your skills and get better prepared.
           </p>
 
-        <div className="flex flex-row justify-between items-center mt-5">
-          <DisplayTechIcons techStack={techstack} />
+<div className="flex justify-between items-center mt-6 gap-4">
+  <div className="flex gap-2">
+    <DisplayTechIcons techStack={techstack} size={26} />
+  </div>
 
-          <Button className="btn-primary text-xs px-4 py-2">
-            <Link href={`/interview/${interviewId}`}>
-              View Interview
-            </Link>
-          </Button>
-        </div>
+  <Link href={`/interview/${interviewId}`}>
+  <Button className="btn-primary text-sm px-5 py-2.5 font-medium shadow-md hover:shadow-lg transition-all">
+      View Interview
+    </Button>
+  </Link>
+</div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

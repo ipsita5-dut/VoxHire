@@ -1,94 +1,156 @@
 'use server';
 
 import { db } from '@/admin';
-import { feedbackSchema } from '@/mappings';
-import { generateObject } from 'ai';
-import { google } from '@ai-sdk/google';
-import { Interview, Feedback } from '@/types';
+import { InterviewTemplate, UserInterview, Feedback } from '@/types';
+import { getDocs, collection } from 'firebase/firestore'; // Only if needed for client SDK (delete if using only admin)
+import { Timestamp } from 'firebase-admin/firestore'; // Admin SDK Timestamp
 
-export async function getInterviewsByUserId(userId: string): Promise<Interview[] | null> {
-  const snapshot = await db
-    .collection('interviews')
-    .where('userId', '==', userId)
-    .orderBy('createdAt', 'desc')
-    .get();
+// ✅ Fetch finalized interviews for a specific user
+export async function getLatestInterviews({ userId, limit: max = 10 }: { userId: string, limit?: number }): Promise<UserInterview[]> {
+  try {
+    const ref = db.collection("userInterviews");
+    const q = ref
+      .where("userId", "==", userId)
+      .where("finalized", "==", true)
+      .orderBy("createdAt", "desc")
+      .limit(max);
 
-return snapshot.docs.map(doc => {
-  const data = doc.data();
+    const snapshot = await q.get();
 
-  const createdAt = (() => {
-    const value = data.createdAt;
-    if (!value) return null;
-
-    // Real Firestore Timestamp
-    if (typeof value.toDate === "function") {
-      return value.toDate().toISOString();
-    }
-
-    // Manually inserted timestamp object
-    if (value._seconds) {
-      const millis = value._seconds * 1000 + Math.floor((value._nanoseconds || 0) / 1_000_000);
-      return new Date(millis).toISOString();
-    }
-
-    return null;
-  })();
-
-  return {
-    id: doc.id,
-    ...data,
-    createdAt,
-  };
-}) as Interview[];
-
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as UserInterview[];
+  } catch (err) {
+    console.error("Error fetching latest interviews:", err);
+    return [];
+  }
 }
 
-export async function getLatestInterviews(params: {
-  userId?: string;
-  limit?: number;
-}): Promise<Interview[] | null> {
-  const { userId, limit = 20 } = params;
 
-  const snapshot = await db
-    .collection('interviews')
-    .where('finalized', '==', true)
-    .orderBy('createdAt', 'desc')
-    .limit(limit * 2) // fetch extra to compensate for client-side filtering
-    .get();
+// ✅ Get explore templates (excluding finalized ones by current user)
+export async function getExploreInterviews(userId: string): Promise<InterviewTemplate[]> {
+  try {
+    const templatesSnap = await db.collection("interviewTemplates").get();
+    const templates = templatesSnap.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as InterviewTemplate[];
+
+    const userInterviewsSnap = await db.collection("userInterviews")
+      .where("userId", "==", userId)
+      .where("finalized", "==", true)
+      .get();
+
+// Extract attempted templateIds
+    const attemptedTemplateIds = userInterviewsSnap.docs.map(doc => {
+      const data = doc.data() as UserInterview;
+      return data.templateId;
+    });
+    const filtered = templates.filter(template => !attemptedTemplateIds.includes(template.id));
+
+    return filtered;
+  } catch (err) {
+    console.error("Error in getExploreInterviews:", err);
+    return [];
+  }
+}
+
+// ✅ 3. Get a template by its ID
+export async function getInterviewById(id: string): Promise<InterviewTemplate | null> {
+  try {
+    const doc = await db.collection('interviewTemplates').doc(id).get();
+    return doc.exists ? ({ id: doc.id, ...doc.data() } as InterviewTemplate) : null;
+  } catch (err) {
+    console.error('Error getting interview template:', err);
+    return null;
+  }
+}
+
+
+// export async function getInterviewsByUserId(userId: string): Promise<Interview[] | null> {
+//   const snapshot = await db
+//     .collection('interviews')
+//     .where('userId', '==', userId)
+//     .orderBy('createdAt', 'desc')
+//     .get();
+
+// return snapshot.docs.map(doc => {
+//   const data = doc.data();
+
+//   const createdAt = (() => {
+//     const value = data.createdAt;
+//     if (!value) return null;
+
+//     // Real Firestore Timestamp
+//     if (typeof value.toDate === "function") {
+//       return value.toDate().toISOString();
+//     }
+
+//     // Manually inserted timestamp object
+//     if (value._seconds) {
+//       const millis = value._seconds * 1000 + Math.floor((value._nanoseconds || 0) / 1_000_000);
+//       return new Date(millis).toISOString();
+//     }
+
+//     return null;
+//   })();
+
+//   return {
+//     id: doc.id,
+//     ...data,
+//     createdAt,
+//   };
+// }) as Interview[];
+
+// }
+
+// export async function getLatestInterviews(params: {
+//   userId?: string;
+//   limit?: number;
+// }): Promise<Interview[] | null> {
+//   const { userId, limit = 20 } = params;
+
+//   const snapshot = await db
+//     .collection('interviews')
+//     .where('finalized', '==', true)
+//     .orderBy('createdAt', 'desc')
+//     .limit(limit * 2) // fetch extra to compensate for client-side filtering
+//     .get();
 
     
-const interviews = snapshot.docs.map(doc => {
-  const data = doc.data();
-  const createdAt = (() => {
-  const value = data.createdAt;
-  if (!value) return null;
+// const interviews = snapshot.docs.map(doc => {
+//   const data = doc.data();
+//   const createdAt = (() => {
+//   const value = data.createdAt;
+//   if (!value) return null;
 
-  if (typeof value.toDate === 'function') {
-    return value.toDate().toISOString();
-  }
+//   if (typeof value.toDate === 'function') {
+//     return value.toDate().toISOString();
+//   }
 
-  if (value._seconds) {
-    const millis = value._seconds * 1000 + Math.floor((value._nanoseconds || 0) / 1_000_000);
-    return new Date(millis).toISOString();
-  }
+//   if (value._seconds) {
+//     const millis = value._seconds * 1000 + Math.floor((value._nanoseconds || 0) / 1_000_000);
+//     return new Date(millis).toISOString();
+//   }
 
-  return null;
-})();
+//   return null;
+// })();
 
-  return {
-  id: doc.id,
-  ...data,
-  createdAt,
-};
+//   return {
+//   id: doc.id,
+//   ...data,
+//   createdAt,
+// };
 
-}) as Interview[];
-
-
-  const filtered = interviews.filter(interview => interview.userId !== userId).slice(0, limit);
+// }) as Interview[];
 
 
-  return filtered;
-}
+//   const filtered = interviews.filter(interview => interview.userId !== userId).slice(0, limit);
+
+
+//   return filtered;
+// }
 
 export async function getFeedbackByInterviewId(params: {
   interviewId: string;
@@ -109,10 +171,10 @@ export async function getFeedbackByInterviewId(params: {
   return { id: doc.id, ...doc.data() } as Feedback;
 }
 
-export async function getInterviewById(id: string): Promise<Interview | null> {
-  const doc = await db.collection('interviews').doc(id).get();
-  return doc.exists ? ({ id: doc.id, ...doc.data() } as Interview) : null;
-}
+// export async function getInterviewById(id: string): Promise<Interview | null> {
+//   const doc = await db.collection('interviews').doc(id).get();
+//   return doc.exists ? ({ id: doc.id, ...doc.data() } as Interview) : null;
+// }
 
 export async function createFeedback(params: {
   interviewId: string;

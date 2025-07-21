@@ -9,7 +9,7 @@ import { signOut } from 'firebase/auth';
 import { auth } from '@/client'; // adjust path if needed
 
 const menuItems = [
-  { label: 'Home', icon: <Home size={20} />, link: '/dashboard' },
+  { label: 'Home', icon: <Home size={20} />, link: '/' },
   { label: 'Progress Report', icon: <BarChart2 size={20} />, link: '/dashboard/progress' },
   { label: 'Profile', icon: <User size={20} />, link: '/dashboard/profile' },
 ];
