@@ -22,6 +22,8 @@ type AgentProps = {
   interviewId: string;
   type: "generate" | "interview";
   questions?: InterviewQuestion[];
+    profileImage?: string;  // <-- Add this line
+
 };
 
 enum CallStatus {
@@ -49,6 +51,7 @@ const Agent = ({
   interviewId,
   type,
   questions=[],
+  profileImage
 }: AgentProps) => {
   const router = useRouter();
   const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
@@ -264,5 +267,6 @@ const handleDisconnect = async () => {
     </>
   );
 };
+
 
 export default Agent;
