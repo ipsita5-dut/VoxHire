@@ -63,7 +63,7 @@ export async function getExploreInterviews(userId: string): Promise<InterviewTem
 // ✅ 3. Get a template by its ID
 export async function getInterviewById(id: string): Promise<InterviewTemplate | null> {
   try {
-    const doc = await db.collection('userInterviews').doc(id).get();
+    const doc = await db.collection('interviewTemplates').doc(id).get();
     return doc.exists ? ({ id: doc.id, ...doc.data() } as InterviewTemplate) : null;
   } catch (err) {
     console.error('Error getting interview template:', err);
@@ -74,7 +74,7 @@ export async function getInterviewById(id: string): Promise<InterviewTemplate | 
 //Current interview for which feedback is generated
 export async function getCurrInterviewById(id: string): Promise<InterviewTemplate | null> {
   try {
-    const doc = await db.collection('interviewTemplates').doc(id).get();
+    const doc = await db.collection('userInterviews').doc(id).get();
     return doc.exists ? ({ id: doc.id, ...doc.data() } as InterviewTemplate) : null;
   } catch (err) {
     console.error('Error getting interview template:', err);
@@ -343,4 +343,5 @@ const feedback: Omit<Feedback, 'id'> = {
     return { success: false };
   }
 }
+
 
