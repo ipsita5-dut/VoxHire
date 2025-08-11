@@ -9,12 +9,13 @@ import {
 } from "@/lib/actions/general.actions";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/actions/auth.action";
-interface RouteParams {
+interface PageProps {
   params: {
     id: string;
   };
 }
-const Feedback = async ({ params }: RouteParams) => {
+
+const Feedback = async ({ params }: PageProps) => {
   const { id } = params;
   const user = await getCurrentUser();
 
@@ -126,3 +127,4 @@ const Feedback = async ({ params }: RouteParams) => {
 
 
 export default Feedback;
+
