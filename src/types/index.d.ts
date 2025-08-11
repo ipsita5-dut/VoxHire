@@ -22,8 +22,6 @@ export interface NormalizedInterview {
   createdAt: string;
 }
 
-// src/types/index.d.ts or index.ts
-
 export interface RouteParams {
   params: {
     id: string;
@@ -196,6 +194,7 @@ export interface ResumeAnalysis {
 //   questions?: string[]
 //   feedbackId?: string
 // }
+
 
 
 
