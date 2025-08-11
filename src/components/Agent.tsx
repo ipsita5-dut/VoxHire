@@ -19,7 +19,7 @@ type InterviewQuestion = {
 type AgentProps = {
   userName: string;
   userId: string;
-  interviewId: string;
+  interviewId?: string;  // <-- make this optional
   type: "generate" | "interview";
   questions?: InterviewQuestion[];
     profileImage?: string;  // <-- Add this line
@@ -270,3 +270,4 @@ const handleDisconnect = async () => {
 
 
 export default Agent;
+
