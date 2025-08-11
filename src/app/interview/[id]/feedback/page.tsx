@@ -15,8 +15,14 @@ interface RouteParams {
     id: string;
   };
 }
-const Feedback = async ({ params }: RouteParams) => {
-  const { id } =  params;
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
+const Feedback = async (props: PageProps) => {
+  const { id } = props.params;
   const user = await getCurrentUser();
 
 const interview = await getCurrInterviewById(id);  //changed
@@ -126,6 +132,7 @@ const interview = await getCurrInterviewById(id);  //changed
 };
 
 export default Feedback;
+
 
 
 
