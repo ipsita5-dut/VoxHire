@@ -164,6 +164,11 @@ const handleDisconnect = async () => {
   if (type === "interview") {
     try {
       // 1. Finalize user interview
+      if (!interviewId) {
+  console.error("Missing interviewId, cannot finalize interview");
+  router.push("/dashboard");
+  return;
+}
       await finalizeUserInterview(interviewId);
       console.log("✅ Interview finalized");
 
@@ -274,5 +279,6 @@ const handleDisconnect = async () => {
 
 
 export default Agent;
+
 
 
