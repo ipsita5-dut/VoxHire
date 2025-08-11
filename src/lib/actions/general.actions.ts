@@ -71,6 +71,17 @@ export async function getInterviewById(id: string): Promise<InterviewTemplate | 
   }
 }
 
+//Current interview for which feedback is generated
+export async function getCurrInterviewById(id: string): Promise<InterviewTemplate | null> {
+  try {
+    const doc = await db.collection('interviewTemplates').doc(id).get();
+    return doc.exists ? ({ id: doc.id, ...doc.data() } as InterviewTemplate) : null;
+  } catch (err) {
+    console.error('Error getting interview template:', err);
+    return null;
+  }
+}
+
 // ✅ Get UserInterview by user + templateId (not finalized)
 export async function getUserInterview(userId: string, templateId: string): Promise<UserInterview | null> {
   const snap = await db.collection("userInterviews")
@@ -332,3 +343,4 @@ const feedback: Omit<Feedback, 'id'> = {
     return { success: false };
   }
 }
+
