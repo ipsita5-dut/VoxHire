@@ -47,7 +47,7 @@ export interface UserInterview {
 }
 
 export interface InterviewCardProps {
-  interview: Interview;
+  interview: NormalizedInterview;
 }
 
 export interface TranscriptMessage {
@@ -187,6 +187,7 @@ export interface ResumeAnalysis {
 //   questions?: string[]
 //   feedbackId?: string
 // }
+
 
 
 
