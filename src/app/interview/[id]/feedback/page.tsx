@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import {
   getFeedbackByInterviewId,
   getInterviewById,
+  getCurrInterviewById
 } from "@/lib/actions/general.actions";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/actions/auth.action";
@@ -19,7 +20,7 @@ const Feedback = async (props: any) => {
   const { id } = props.params;
   const user = await getCurrentUser();
 
-  const interview = await getInterviewById(id);
+const interview = await getCurrInterviewById(id);  //changed
   if (!interview) redirect("/");
 
   const feedback = await getFeedbackByInterviewId({
@@ -127,5 +128,6 @@ const Feedback = async (props: any) => {
 
 
 export default Feedback;
+
 
 
