@@ -35,7 +35,7 @@ const Page = async () => {
 
       <Agent
         userName={user?.name!}
-        userId={user?.id}
+userId={user?.id!}
         profileImage="/user-avatar.png"
         type="generate"
       />
@@ -44,4 +44,5 @@ const Page = async () => {
 };
 
 export default Page;
+
 
