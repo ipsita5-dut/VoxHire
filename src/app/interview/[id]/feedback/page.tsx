@@ -127,7 +127,7 @@ const interview = await getCurrInterviewById(id);  //changed
 };
 
 
-export default Feedback;
+
 
 
 
