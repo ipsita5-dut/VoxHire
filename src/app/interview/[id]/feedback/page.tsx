@@ -10,14 +10,14 @@ import {
 } from "@/lib/actions/general.actions";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/actions/auth.action";
-interface PageProps {
+interface RouteParams {
   params: {
     id: string;
   };
 }
 
-const Feedback = async (props: any) => {
-  const { id } = props.params;
+export default async function InterviewDetails({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params; 
   const user = await getCurrentUser();
 
 const interview = await getCurrInterviewById(id);  //changed
@@ -128,6 +128,7 @@ const interview = await getCurrInterviewById(id);  //changed
 
 
 export default Feedback;
+
 
 
 
