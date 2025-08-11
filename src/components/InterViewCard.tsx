@@ -19,7 +19,7 @@ interface Interview {
   type: string;
   techstack: string[];
   createdAt?: string;
-  questions: {
+   questions?: {  // <-- optional now
     question: string;
     category?: string;
     difficulty?: string;
@@ -109,3 +109,4 @@ const InterviewCard: React.FC<InterviewCardProps> = ({ interview }) => {
 };
 
 export default InterviewCard;
+
