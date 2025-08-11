@@ -22,6 +22,10 @@ export interface NormalizedInterview {
   createdAt: string;
 }
 
+interface RouteParams {
+  params: Promise<Record<string, string>>;
+  searchParams: Promise<Record<string, string>>;
+}
 
 
 export interface InterviewQuestion {
@@ -187,6 +191,7 @@ export interface ResumeAnalysis {
 //   questions?: string[]
 //   feedbackId?: string
 // }
+
 
 
 
