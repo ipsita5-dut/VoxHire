@@ -23,9 +23,10 @@ export interface NormalizedInterview {
 }
 
 export interface RouteParams {
-  params: Record<string, string>;
+  params: { id: string };
   searchParams?: Record<string, string>;
 }
+
 
 
 export interface InterviewQuestion {
@@ -191,6 +192,7 @@ export interface ResumeAnalysis {
 //   questions?: string[]
 //   feedbackId?: string
 // }
+
 
 
 
