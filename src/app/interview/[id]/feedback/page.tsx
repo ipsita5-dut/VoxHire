@@ -22,9 +22,10 @@ import { getCurrentUser } from "@/lib/actions/auth.action";
 // }
 import { RouteParams } from '@/types';  // adjust the path if needed
 
+
 const Feedback = async ({ params }: RouteParams) => {
-  const resolvedParams = await params;  // <-- await here
-  const { id } = resolvedParams;
+  const { id } = await params; // <-- await here to resolve the Promise
+
   const user = await getCurrentUser();
 
 const interview = await getCurrInterviewById(id);  //changed
@@ -134,6 +135,7 @@ const interview = await getCurrInterviewById(id);  //changed
 };
 
 export default Feedback;
+
 
 
 
