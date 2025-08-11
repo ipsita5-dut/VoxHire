@@ -28,6 +28,12 @@ export interface RouteParams {
   };
   searchParams?: Record<string, string>;
 }
+export interface RouteParams {
+  params: {
+    id: string;
+  };
+  searchParams?: Record<string, string>;
+}
 
 
 
@@ -194,6 +200,7 @@ export interface ResumeAnalysis {
 //   questions?: string[]
 //   feedbackId?: string
 // }
+
 
 
 
