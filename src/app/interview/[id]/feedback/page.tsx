@@ -24,8 +24,11 @@ import { RouteParams } from '@/types';  // adjust the path if needed
 
 
 const Feedback = async ({ params, searchParams }: RouteParams) => {
-  // params and searchParams are already resolved objects
-  const { id } = params;
+  const resolvedParams = await params;
+  const { id } = resolvedParams;
+
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+
   const user = await getCurrentUser();
 
 const interview = await getCurrInterviewById(id);  //changed
@@ -135,6 +138,7 @@ const interview = await getCurrInterviewById(id);  //changed
 };
 
 export default Feedback;
+
 
 
 
