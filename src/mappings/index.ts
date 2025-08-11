@@ -1,6 +1,6 @@
 import { CreateAssistantDTO } from "@vapi-ai/web/dist/api";
 import { z } from "zod";
-import type { Interview } from "@/types/index"; // Adjust path based on your project
+import type { NormalizedInterview  } from "@/types/index"; // Adjust path based on your project
 
 // Normalize tech stack names
 export const mappings: Record<string, string> = {
@@ -235,3 +235,4 @@ export const dummyInterviews = [
   },
   // Add more...
 ];
+
