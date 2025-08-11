@@ -76,6 +76,10 @@ const Agent = ({
         setMessages((prev) => [...prev, { role: message.role, content: message.transcript! }]);
       if (type === "interview" && message.role === "user" && questions[questionIndex]) {
           // ✅ Save answer to backend
+        if (!interviewId) {
+    console.error("Missing interviewId, cannot update answer");
+    return;
+  }
           try {
             await updateUserAnswer({
               userInterviewId: interviewId,
@@ -270,4 +274,5 @@ const handleDisconnect = async () => {
 
 
 export default Agent;
+
 
