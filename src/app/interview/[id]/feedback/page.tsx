@@ -124,7 +124,8 @@ const interview = await getCurrInterviewById(id);  //changed
       </div>
     </section>
   );
-};
+}
+
 
 
 
