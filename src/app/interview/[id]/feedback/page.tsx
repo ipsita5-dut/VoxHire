@@ -20,12 +20,11 @@ import { getCurrentUser } from "@/lib/actions/auth.action";
 //     id: string;
 //   };
 // }
-import { RouteParams } from '@/types'; // adjust the path accordingly
-
-
+import { RouteParams } from '@/types';  // adjust the path if needed
 
 const Feedback = async ({ params }: RouteParams) => {
-  const { id } = params; // no await here!
+  const { id } = params;  // No await here — params is a plain object
+
   const user = await getCurrentUser();
 
 const interview = await getCurrInterviewById(id);  //changed
@@ -135,6 +134,7 @@ const interview = await getCurrInterviewById(id);  //changed
 };
 
 export default Feedback;
+
 
 
 
