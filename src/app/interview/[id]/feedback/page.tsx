@@ -23,8 +23,9 @@ import { getCurrentUser } from "@/lib/actions/auth.action";
 import { RouteParams } from '@/types';  // adjust the path if needed
 
 
-const Feedback = async ({ params }: RouteParams) => {
-  const { id } = await params; // <-- await here to resolve the Promise
+const Feedback = async ({ params, searchParams }: RouteParams) => {
+  const { id } = await params;
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
 
   const user = await getCurrentUser();
 
@@ -135,6 +136,7 @@ const interview = await getCurrInterviewById(id);  //changed
 };
 
 export default Feedback;
+
 
 
 
