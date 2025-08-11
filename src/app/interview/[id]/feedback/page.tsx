@@ -10,19 +10,22 @@ import {
 } from "@/lib/actions/general.actions";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/actions/auth.action";
-interface RouteParams {
-  params: {
-    id: string;
-  };
-}
-interface PageProps {
-  params: {
-    id: string;
-  };
-}
+// interface RouteParams {
+//   params: {
+//     id: string;
+//   };
+// }
+// interface PageProps {
+//   params: {
+//     id: string;
+//   };
+// }
+import { RouteParams } from '@/types'; // adjust the path accordingly
 
-const Feedback = async (props: any) => {
-  const { id } = props.params;
+
+
+const Feedback = async ({ params }: RouteParams) => {
+  const { id } =  await params;
   const user = await getCurrentUser();
 
 const interview = await getCurrInterviewById(id);  //changed
@@ -132,6 +135,7 @@ const interview = await getCurrInterviewById(id);  //changed
 };
 
 export default Feedback;
+
 
 
 
