@@ -15,8 +15,8 @@ interface PageProps {
   };
 }
 
-const Feedback = async ({ params }: PageProps) => {
-  const { id } = params;
+const Feedback = async (props: any) => {
+  const { id } = props.params;
   const user = await getCurrentUser();
 
   const interview = await getInterviewById(id);
@@ -127,4 +127,5 @@ const Feedback = async ({ params }: PageProps) => {
 
 
 export default Feedback;
+
 
