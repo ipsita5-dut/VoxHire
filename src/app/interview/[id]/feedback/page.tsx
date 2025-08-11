@@ -15,9 +15,8 @@ interface RouteParams {
     id: string;
   };
 }
-
-export default async function InterviewDetails({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params; 
+const Feedback = async ({ params }: RouteParams) => {
+  const { id } =  params;
   const user = await getCurrentUser();
 
 const interview = await getCurrInterviewById(id);  //changed
@@ -124,8 +123,9 @@ const interview = await getCurrInterviewById(id);  //changed
       </div>
     </section>
   );
-}
+};
 
+export default Feedback;
 
 
 
