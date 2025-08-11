@@ -25,7 +25,7 @@ import { RouteParams } from '@/types'; // adjust the path accordingly
 
 
 const Feedback = async ({ params }: RouteParams) => {
-  const { id } =   params;
+  const { id } =  await params;
   const user = await getCurrentUser();
 
 const interview = await getCurrInterviewById(id);  //changed
@@ -135,6 +135,7 @@ const interview = await getCurrInterviewById(id);  //changed
 };
 
 export default Feedback;
+
 
 
 
