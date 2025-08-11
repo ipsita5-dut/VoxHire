@@ -15,7 +15,7 @@ interface RouteParams {
   };
 }
 const Feedback = async ({ params }: RouteParams) => {
-  const { id } = await params;
+  const { id } = params;
   const user = await getCurrentUser();
 
   const interview = await getInterviewById(id);
@@ -123,5 +123,6 @@ const Feedback = async ({ params }: RouteParams) => {
     </section>
   );
 };
+
 
 export default Feedback;
